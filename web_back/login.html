@@ -1,36 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>大事件-后台登录页</title>
-    <link rel="stylesheet" type="text/css" href="css/reset.css">
-    <link rel="stylesheet" type="text/css" href="css/iconfont.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-</head>
+    <link rel="stylesheet" type="text/css" href="css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="css/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+  </head>
 
-<body>
+  <body>
     <div class="main_wrap">
-        <div class="header">
-            <a href="#" class="logo"><img src="images/logo.png" alt=""></a>
-            <div class="copyright">CopyRight © 2019 深圳百秀信息技术股份有限公司<br>All Rights Reserved</div>
+      <div class="header">
+        <a href="#" class="logo"><img src="images/logo.png" alt=""/></a>
+        <div class="copyright">
+          CopyRight © 2019 深圳百秀信息技术股份有限公司<br />All Rights Reserved
         </div>
+      </div>
 
-        <div class="login_form_con">
-            <div class="login_title"></div>
-            <form class="login_form">
-                <i class="iconfont icon-user"></i>
-                <i class="iconfont icon-key"></i>
-                <input type="text" class="input_txt" placeholder="邮箱/手机号">
-                <input type="password" class="input_pass" placeholder="密码">
-                <input type="submit" class="input_sub" value="登 录">
-            </form>
-        </div>
-
-    </div> 
-
-</body>
-
+      <div class="login_form_con">
+        <div class="login_title"></div>
+        <form class="login_form">
+          <i class="iconfont icon-user"></i>
+          <i class="iconfont icon-key"></i>
+          <input type="text" class="input_txt" placeholder="邮箱/手机号" />
+          <input type="password" class="input_pass" placeholder="密码" />
+          <input type="submit" class="input_sub" value="登 录" />
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
+<!-- 导入jq -->
+<script src="./js/jquery-1.12.4.min.js"></script>
+<script>
+  /*
+        用户登录
+        1. 为登录按钮绑定点击事件
+        2. 获取用户名 和 密码
+            1. 去空格
+            2. 非空判断 
+            3. 空 提示
+            4. 有 继续执行
+        3. ajax调用登录接口
+            1. 成功
+                1. 去首页
+            2. 失败
+                1. 提示用户
+    */
+  $(function() {
+    $('.input_sub').click(function(e) {
+      // 阻止默认行为
+      e.preventDefault()
+      // 获取用户名和密码
+      var user_name = $('.input_txt')
+        .val()
+        .trim()
+      var password = $('.input_pass')
+        .val()
+        .trim()
+      if (user_name == '' || password == '') {
+        alert('哥们，写点啥呗！！')
+        return
+      }
+      // ajax
+      $.ajax({
+        url: 'https://autumnfish.cn/big/admin/login',
+        type: 'post',
+        data: {
+          user_name: user_name,
+          password: password
+        },
+        success: function(backData) {
+          //   console.log(backData)
+          if (backData.code == 400) {
+            alert('哥们，用户名或密码错了哦，你是机器人吗？')
+          }else if(backData.code==200){
+              // 去首页
+              window.location.href ='./index.html'
+          }
+        }
+      })
+    })
+  })
+</script>
