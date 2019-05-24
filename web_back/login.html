@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css" />
     <link rel="stylesheet" type="text/css" href="css/iconfont.css" />
     <link rel="stylesheet" type="text/css" href="css/main.css" />
+    <!-- 导入bs的样式 -->
+    <link rel="stylesheet" href="./js/bootstrap/css/bootstrap.min.css" />
   </head>
 
   <body>
@@ -30,10 +32,44 @@
         </form>
       </div>
     </div>
+    <!-- bootstarp的弹出框 -->
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="myModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">提示框!!</h4>
+          </div>
+          <div class="modal-body my-modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              狠心关闭
+            </button>
+            <button type="button" class="btn btn-primary">残忍确认</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
 <!-- 导入jq -->
 <script src="./js/jquery-1.12.4.min.js"></script>
+<!-- 导入bs的js -->
+<script src="./js/bootstrap/js/bootstrap.min.js"></script>
 <script>
   /*
         用户登录
@@ -61,7 +97,10 @@
         .val()
         .trim()
       if (user_name == '' || password == '') {
-        alert('哥们，写点啥呗！！')
+        // alert('哥们，写点啥呗！！')
+        // 修改内容
+        $('.my-modal-body').text('记得输入用户名和密码哦！！')
+        $('#myModal').modal()
         return
       }
       // ajax
@@ -75,10 +114,12 @@
         success: function(backData) {
           //   console.log(backData)
           if (backData.code == 400) {
-            alert('哥们，用户名或密码错了哦，你是机器人吗？')
-          }else if(backData.code==200){
-              // 去首页
-              window.location.href ='./index.html'
+            // alert('哥们，用户名或密码错了哦，你是机器人吗？')
+            $('.my-modal-body').text('哥们，用户名或密码错了哦！')
+            $('#myModal').modal()
+          } else if (backData.code == 200) {
+            // 去首页
+            window.location.href = './index.html'
           }
         }
       })
