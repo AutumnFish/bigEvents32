@@ -24,11 +24,7 @@
               >用户名称：</label
             >
             <div class="col-sm-4">
-              <input
-                type="text"
-                class="form-control username"
-                value="李思思"
-              />
+              <input type="text" class="form-control username" value="李思思" />
             </div>
           </div>
           <div class="form-group">
@@ -36,11 +32,7 @@
               >昵称：</label
             >
             <div class="col-sm-4">
-              <input
-                type="text"
-                class="form-control nickname"
-                value="思思"
-              />
+              <input type="text" class="form-control nickname" value="思思" />
             </div>
           </div>
           <div class="form-group">
@@ -51,7 +43,6 @@
               <input
                 type="text"
                 class="form-control email"
-               
                 value="lisisi@126.com"
               />
             </div>
@@ -100,6 +91,13 @@
             1. 进入个人中心之后
             2. 调用获取用户详细信息接口
             3. 数据获取到之后 渲染到 页面上
+
+        本地图片预览
+          1. 为input file 绑定change事件 
+          2. 获取this.files[0]
+          3. 调用方法生成url
+          4. 设置给隔壁的img即可
+
         */
       $(function() {
         // 调用接口
@@ -108,13 +106,23 @@
           type: 'get',
           success: function(backData) {
             // console.log(backData)
-            // 挨个设置内容 
+            // 挨个设置内容
             for (const key in backData.data) {
-                $("input."+key).val(backData.data[key])
+              $('input.' + key).val(backData.data[key])
             }
             // 头像
-            $('.user_pic').attr('src',backData.data.user_pic)
+            $('.user_pic').attr('src', backData.data.user_pic)
           }
+        })
+
+        // change事件
+        $('#exampleInputFile').change(function() {
+          // files是dom元素的属性
+          var file = this.files[0]
+          // 生成url
+          var url = URL.createObjectURL(file)
+          // 设置给img
+          $(this).prev().attr('src',url)
         })
       })
     </script>
