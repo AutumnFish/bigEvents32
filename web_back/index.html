@@ -19,7 +19,7 @@
       <a href="#" class="logo"><img src="images/logo02.png" alt="logo"/></a>
       <div class="user_info">
         <img src="images/2.jpg" alt="person" />
-        <span>欢迎&nbsp;&nbsp;李思思</span>
+        <span>欢迎&nbsp;&nbsp;<i>李思思</i></span>
         <b>管理员</b>
       </div>
       <div class="menu">
@@ -203,10 +203,10 @@
         }
       }
     </script>
-  </body>
-</html>
-<script>
-  /*
+
+    <!-- 自己的逻辑 -->
+    <script>
+      /*
         用户登出
             1. 退出按钮绑定点击事件
             2. 弹出bootstrap的模态框 提示是否确认
@@ -214,28 +214,54 @@
                 2. 确认
                     1. ajax调用接口
                     2. 数据回来之后 返回登录页即可
-    */
-  $(function() {
-    // 退出按钮的 点击事件 弹框提示
-    $('.icon-tuichu')
-      .parent()
-      .click(function() {
-        // 弹框
-        $('#myModal').modal()
-      })
 
-    // 点击确认
-    $('.btn-leave').click(function() {
-      $.ajax({
-        url: 'https://autumnfish.cn/big/admin/logout',
-        type: 'post',
-        success: function(backData) {
-          //   console.log(backData)
-          if (backData.code == 200) {
-            window.location.href = './login.html'
+      获取用户信息
+        请求地址：https://autumnfish.cn/big32/admin/getuser
+        请求方式：get
+        请求参数：
+        步骤
+        1. 进入到首页之后
+        2. 通过用户信息接口获取用户的数据
+        3. 渲染到页面上
+
+    */
+      $(function() {
+        // 退出按钮的 点击事件 弹框提示
+        $('.icon-tuichu')
+          .parent()
+          .click(function() {
+            // 弹框
+            $('#myModal').modal()
+          })
+
+        // 点击确认
+        $('.btn-leave').click(function() {
+          $.ajax({
+            url: 'https://autumnfish.cn/big/admin/logout',
+            type: 'post',
+            success: function(backData) {
+              //   console.log(backData)
+              if (backData.code == 200) {
+                window.location.href = './login.html'
+              }
+            }
+          })
+        })
+
+        // 获取用户信息即可
+        $.ajax({
+          url: 'https://autumnfish.cn/big32/admin/getuser',
+          type: 'get',
+          success: function(backData) {
+            // console.log(backData);
+            // 左侧
+            $('.user_info img').attr('src', backData.data.user_pic)
+            $('.user_info i').html(backData.data.nickname)
+            // 右侧
+            $('.user_center_link img').attr('src', backData.data.user_pic)
           }
-        }
+        })
       })
-    })
-  })
-</script>
+    </script>
+  </body>
+</html>
