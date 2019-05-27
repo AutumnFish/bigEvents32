@@ -216,7 +216,7 @@
                     2. 数据回来之后 返回登录页即可
 
       获取用户信息
-        请求地址：https://autumnfish.cn/big32/admin/getuser
+        请求地址：http://localhost:8000/admin/getuser
         请求方式：get
         请求参数：
         步骤
@@ -250,7 +250,7 @@
 
         // 获取用户信息即可
         $.ajax({
-          url: 'https://autumnfish.cn/big32/admin/getuser',
+          url: 'http://localhost:8000/admin/getuser',
           type: 'get',
           success: function(backData) {
             // console.log(backData);

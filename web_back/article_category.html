@@ -192,7 +192,7 @@
     <script>
       /*
           获取文章分类信息
-            请求地址：https://autumnfish.cn/big32/admin/category_search
+            请求地址：http://localhost:8000/admin/category_search
             请求方式：get
             请求参数：无
             步骤
@@ -203,7 +203,7 @@
                 文章新增
 
         新增分类
-            请求地址：https://autumnfish.cn/big32/admin/category_add
+            请求地址：http://localhost:8000/admin/category_add
             请求方式：post
             请求参数：
             步骤
@@ -219,7 +219,7 @@
       $(function() {
         function getCate() {
           $.ajax({
-            url: 'https://autumnfish.cn/big32/admin/category_search',
+            url: 'http://localhost:8000/admin/category_search',
             type: 'get',
             success: function(backData) {
               // console.log(backData);
@@ -235,7 +235,7 @@
         // 点击新增按钮
         $('#model_add').click(function() {
           $.ajax({
-            url: 'https://autumnfish.cn/big32/admin/category_add',
+            url: 'http://localhost:8000/admin/category_add',
             type: 'post',
             data: {
               name: $('.cate_name').val(),

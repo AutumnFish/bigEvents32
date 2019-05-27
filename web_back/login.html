@@ -105,7 +105,9 @@
       }
       // ajax
       $.ajax({
-        url: 'https://autumnfish.cn/big/admin/login',
+        // url: 'https://autumnfish.cn/big/admin/login',
+        // 替换为本地
+        url:"http://localhost:8000/admin/login",
         type: 'post',
         data: {
           user_name: user_name,
