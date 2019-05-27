@@ -103,7 +103,7 @@
               <td colspan="3" class="text-center">
                 <a
                   href="#"
-                  class="btn btn-success"
+                  class="btn btn-success btn-add"
                   data-toggle="modal"
                   data-target="#addModal"
                   >新增分类</a
@@ -115,6 +115,7 @@
       </div>
     </div>
 
+    <!-- 模态框 -->
     <div class="modal fade" id="addModal">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -129,17 +130,19 @@
           </div>
           <div class="modal-body">
             <form>
+              <!-- 隐藏域  -->
+              <input type="hidden" name="id" />
               <div class="form-group">
                 <label for="recipient-name" class="control-label"
                   >分类名称:</label
                 >
-                <input type="text" class="form-control cate_name" />
+                <input type="text" class="form-control cate_name" name="name" />
               </div>
               <div class="form-group">
                 <label for="message-text" class="control-label"
                   >分类别名:</label
                 >
-                <input type="text" class="form-control cate_slug" />
+                <input type="text" class="form-control cate_slug" name="slug" />
               </div>
             </form>
           </div>
@@ -182,8 +185,8 @@
               <td>{{$value.name}}</td>
               <td>{{$value.slug}}</td>
               <td class="text-center">
-                  <a href='javascript:editTr({"id":"1","slug":"uncategorized","name":"未分类"});' class="btn btn-info btn-xs">编辑</a>
-                  <a href="javascript:deleteTr( 1 );" class="btn btn-danger btn-xs">删除</a>
+                  <a href='javascript:editTr({"id":"{{$value.id}}","slug":"{{$value.slug}}","name":"{{$value.name}}"});' class="btn btn-info btn-xs">编辑</a>
+                  <a href="javascript:deleteTr( {{$value.id}} );" class="btn btn-danger btn-xs">删除</a>
               </td>
           </tr>
       {{/each}}
@@ -215,42 +218,126 @@
                 2. 调用接口
                 3. 响应回来之后
 
+          分类删除
+            请求地址：http://localhost:8000/admin/category_delete
+            请求方式：post
+            请求参数：id
+            步骤
+            1. 生成每一行的时候，把id到deleteTr()
+            2. 实现deleteTr方法 获取id
+            3. 通过ajax删除对应的数据
+            4. 删除成功之后 重新获取数据（局部刷新）
+
           */
+
       $(function() {
         function getCate() {
           $.ajax({
             url: 'http://localhost:8000/admin/category_search',
             type: 'get',
             success: function(backData) {
-              // console.log(backData);
+              console.log(backData)
               // 调用方法 渲染页面
               var html = template('cate', backData)
               $('tbody').html(html)
             }
           })
         }
+        // 删除数据的方法
+        window.deleteTr = function(id) {
+          // console.log(id)
+          // 调用接口
+          $.ajax({
+            url: 'http://localhost:8000/admin/category_delete',
+            type: 'post',
+            data: {
+              id: id
+            },
+            success: function(backData) {
+              // console.log(backData);
+              if (backData.code == 200) {
+                // 重新获取数据即可
+                getCate()
+              }
+            }
+          })
+        }
+
+        // 弹出编辑框的逻辑
+        window.editTr = function(data) {
+          // console.log(data)
+          // forin
+          for (const key in data) {
+            $('input[name=' + key + ']').val(data[key])
+          }
+          // 改弹框内容
+          $('.modal-title').text('敬请修改把！！！')
+          $('#model_add')
+            .text('保存')
+            .addClass('btn-success')
+        }
+
+        // 点击新增还原外观
+        $('.btn-add').click(function() {
+          // 改弹框内容
+          $('.modal-title').text('肆意新增吧！')
+          $('#model_add')
+            .text('新增 ')
+            .removeClass('btn-success')
+          // 清空内容
+          $('form input').val('')
+        })
 
         // 默认调用一次
         getCate()
         // 点击新增按钮
         $('#model_add').click(function() {
-          $.ajax({
-            url: 'http://localhost:8000/admin/category_add',
-            type: 'post',
-            data: {
-              name: $('.cate_name').val(),
-              slug: $('.cate_slug').val()
-            },
-            success: function(backData) {
-            //   console.log(backData)
-              // 隐藏弹出框
-              $('#addModal').modal('hide')
-              if(backData.code==200){
-                //  重新获取数据
-                getCate()
+          //  如果是保存
+          if ($(this).hasClass('btn-success')) {
+            // 获取数据
+            var id = $('input[name=id]').val()
+            var slug = $('input[name=slug]').val()
+            var name = $('input[name=name]').val()
+            // ajax
+            $.ajax({
+              url: 'http://localhost:8000/admin/category_edit',
+              type: 'post',
+              data: {
+                id: id,
+                slug: slug,
+                name: name
+              },
+              success: function(backData) {
+                console.log(backData)
+                // 重新获取数据即可
+                if (backData.code == 200) {
+                  getCate()
+                }
               }
-            }
-          })
+            })
+            // 局部刷新
+          } else {
+            // 新增
+            $.ajax({
+              url: 'http://localhost:8000/admin/category_add',
+              type: 'post',
+              data: {
+                name: $('.cate_name').val(),
+                slug: $('.cate_slug').val()
+              },
+              success: function(backData) {
+                //   console.log(backData)
+                // 隐藏弹出框
+                $('#addModal').modal('hide')
+                if (backData.code == 200) {
+                  //  重新获取数据
+                  getCate()
+                }
+              }
+            })
+          }
+          // 关闭弹框
+          $('#addModal').modal('hide')
         })
       })
     </script>
