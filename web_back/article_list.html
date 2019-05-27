@@ -24,10 +24,6 @@
                     <form class="form-inline">
                         <select id="selCategory" name="" class="form-control input-sm">
                             <option>所有分类</option>
-                            <option>未分类</option>
-                            <option>奇趣事</option>
-                            <option>会生活</option>
-                            <option>爱旅行</option>
                         </select>
                         <select id="selStatus" name="" class="form-control input-sm">
                             <option>所有状态</option>
@@ -273,6 +269,41 @@
         $('#release_btn').click(function(){
             window.parent.setMenu(1,1);
         })
+    </script>
+    <!-- 模板引擎导入 -->
+    <script src="./js/template-web.js"></script>
+    <!-- 定义模板 选项 -->
+    <script type='text/html'id='cate'>
+        {{each data v}}
+            <option>{{v.name}}</option>
+        {{/each}}
+    </script>
+    <!-- 自己的js -->
+    <script>
+        /*
+            文章类表-分类获取
+                请求地址：http://localhost:8000/admin/category_search
+                请求方式：get
+                请求参数：无
+                步骤
+                1. 打开文章列表页
+                2. 调用文章分类数据接口 获取所有的分类
+                3. 获取到之后设置到页面左上角的 下拉框中
+
+        */
+        $(function () {
+            // 获取分类数据
+            $.ajax({
+                url:'http://localhost:8000/admin/category_search',
+                // type:"get",// get可以省略 默认就是get
+                success:function(backData){
+                    // console.log(backData);
+                    var html =template('cate',backData)
+                    // 添加到select中
+                    $("#selCategory").append(html)
+                }
+            })
+          })
     </script>
 
 </body>
