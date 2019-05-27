@@ -265,7 +265,7 @@
 
         // 弹出编辑框的逻辑
         window.editTr = function(data) {
-          // console.log(data)
+          console.log(data)
           // forin
           for (const key in data) {
             $('input[name=' + key + ']').val(data[key])
@@ -290,23 +290,25 @@
 
         // 默认调用一次
         getCate()
+
         // 点击新增按钮
         $('#model_add').click(function() {
           //  如果是保存
           if ($(this).hasClass('btn-success')) {
             // 获取数据
-            var id = $('input[name=id]').val()
-            var slug = $('input[name=slug]').val()
-            var name = $('input[name=name]').val()
+            // var id = $('input[name=id]').val()
+            // var slug = $('input[name=slug]').val()
+            // var name = $('input[name=name]').val()
             // ajax
             $.ajax({
               url: 'http://localhost:8000/admin/category_edit',
               type: 'post',
-              data: {
-                id: id,
-                slug: slug,
-                name: name
-              },
+              // data: {
+              //   id: id,
+              //   slug: slug,
+              //   name: name
+              // },
+              data:$('form').serialize(),
               success: function(backData) {
                 console.log(backData)
                 // 重新获取数据即可
