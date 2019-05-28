@@ -113,6 +113,14 @@
         </form>
       </div>
     </div>
+    <!-- 导入模板引擎 -->
+    <script src="./js/template-web.js"></script>
+    <!-- 定义模板 -->
+    <script type='text/html' id='cate'>
+        {{each data v}}
+            <option value="{{v.id}}">{{v.name}}</option>
+        {{/each}}
+    </script>
     <script>
       /*
             图片预览
@@ -122,6 +130,16 @@
                 3. files[0] 获取文件
                 4. URL.createObjectURL 生成url
                 5. 把url设置给img
+
+         文章类型获取
+            请求地址：http://localhost:8000/admin/category_search
+            请求方式：get
+            请求参数：无
+            步骤
+            1. 进入到新增页面之后
+            2. 通过ajax获取当前现有的类型数据
+            3. 渲染到页面上
+
         */
       $(function() {
         // 图片预览
@@ -131,6 +149,15 @@
           $(this)
             .prev('img')
             .attr('src', url)
+        })
+        // 获取类型数据
+        $.ajax({
+            url:'http://localhost:8000/admin/category_search',
+            success:function(backData){
+                // console.log(backData);
+                // 渲染到页面上
+                $('select').html(template('cate',backData))
+            }
         })
       })
     </script>
