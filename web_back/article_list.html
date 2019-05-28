@@ -27,7 +27,7 @@
                 <option value="">所有分类</option>
               </select>
               <select id="selStatus" name="" class="form-control input-sm">
-                <option value=''>所有状态</option>
+                <option value="">所有状态</option>
                 <option value="草稿">草稿</option>
                 <option value="已发布">已发布</option>
               </select>
@@ -349,6 +349,30 @@
       $(function() {
         // 页码
         var myPage = 1
+        // 总页数
+        var myTotalPage = 10
+
+        // 根据分页插件的示例修改分页插件的使用
+        var $pagination = $('.pagination')
+        var defaultOpts = {
+          totalPages: myTotalPage,
+          visiblePages: 7,
+          first: '最那边',
+          last: '最外头',
+          prev: '上一页',
+          next: '下一页',
+          onPageClick: function(event, page) {
+            // 事件参数
+            // console.log(event)
+            // 页码
+            // console.log(page)
+            myPage = page
+            // 重新调用获取文章数据的方法
+            getArticles()
+          }
+        }
+        $pagination.twbsPagination(defaultOpts)
+
         // 获取文章数据的方法
         function getArticles() {
           $.ajax({
@@ -359,14 +383,28 @@
               // 文章的分类id
               type: $('#selCategory').val(),
               // 状态
-              state:$("#selStatus").val()
+              state: $('#selStatus').val()
             },
             success: function(backData) {
-              // console.log(backData)
+              console.log(backData)
               // 方法
               var html = template('article', backData)
               // tbody中
               $('tbody').html(html)
+              // 重置页码
+              var totalPages = backData.totalPage
+              if (myTotalPage != totalPages) {
+                // 总页数变了
+                myTotalPage = totalPages
+                // 写死为第一页即可
+                $pagination.twbsPagination('destroy')
+                $pagination.twbsPagination(
+                  $.extend({}, defaultOpts, {
+                    startPage: 1,
+                    totalPages: totalPages
+                  })
+                )
+              }
             }
           })
         }
@@ -385,25 +423,6 @@
 
         // 获取文章数据
         getArticles()
-
-        // 设置分页的插件
-        $('.pagination').twbsPagination({
-          totalPages: 35,
-          visiblePages: 7,
-          first: '最那边',
-          last: '最外头',
-          prev: '上一页',
-          next: '下一页',
-          onPageClick: function(event, page) {
-            // 事件参数
-            // console.log(event)
-            // 页码
-            // console.log(page)
-            myPage = page
-            // 重新调用获取文章数据的方法
-            getArticles()
-          }
-        })
 
         // 点击筛选
         $('#btnSearch').click(function(e) {
