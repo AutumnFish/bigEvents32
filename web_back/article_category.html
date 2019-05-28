@@ -269,6 +269,11 @@
           // forin
           for (const key in data) {
             $('input[name=' + key + ']').val(data[key])
+            /*
+              $('input[name=id]).val(data.id)
+              $('input[name=slug]).val(data.slug)
+              $('input[name=name]).val(data.name)
+            */
           }
           // 改弹框内容
           $('.modal-title').text('敬请修改把！！！')
